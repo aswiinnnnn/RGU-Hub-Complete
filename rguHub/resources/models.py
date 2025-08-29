@@ -43,6 +43,7 @@ class Term(models.Model):
     term_number = models.PositiveSmallIntegerField(help_text="1 for first term, 2 for second, etc.")
     term_type = models.CharField(max_length=16, choices=TermType.choices)
     name = models.CharField(max_length=100, blank=True, help_text="Optional display name")
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
 
     class Meta:
         ordering = ["syllabus__program__short_name", "syllabus__name", "term_number"]
