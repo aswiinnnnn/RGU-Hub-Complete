@@ -19,3 +19,18 @@ class SubjectMaterialSerializer(serializers.ModelSerializer):
             "is_active",
             "created_at",
         ]
+
+
+class SubjectSerializer(serializers.ModelSerializer):
+    term_slug = serializers.CharField(source="term.slug", read_only=True)
+
+    class Meta:
+        model = Subject
+        fields = [
+            "id",
+            "code",
+            "name",
+            "subject_type",
+            "slug",
+            "term_slug",
+        ]

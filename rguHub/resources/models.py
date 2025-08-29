@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 
 
 class Program(models.Model):
@@ -79,6 +80,46 @@ class Subject(models.Model):
 
     def __str__(self) -> str:
         return f"{self.code} - {self.name}"
+
+    def save(self, *args, **kwargs):
+        """
+        Auto-generate a unique slug for the subject if not provided.
+
+        The slug is built from the program short name, term number and subject code,
+        falling back to code and name if needed. If a slug collision occurs,
+        a numeric suffix is appended.
+        """
+        if not self.slug:
+            # Try to build a meaningful base using related Term/Syllabus/Program
+            base_parts = []
+            try:
+                if self.term and self.term.syllabus and self.term.syllabus.program:
+                    prog = self.term.syllabus.program.short_name
+                    base_parts.append(str(prog))
+                if self.term and getattr(self.term, 'term_number', None) is not None:
+                    base_parts.append(str(self.term.term_number))
+            except Exception:
+                # If relations are not available for some reason, ignore and continue
+                pass
+
+            # Prefer using code (short, likely unique per term) then name
+            if self.code:
+                base_parts.append(self.code)
+            elif self.name:
+                base_parts.append(self.name)
+
+            base = slugify("-".join(base_parts)) or slugify(self.code or self.name) or "subject"
+
+            slug_candidate = base
+            counter = 1
+            Model = self.__class__
+            while Model.objects.filter(slug=slug_candidate).exclude(pk=self.pk).exists():
+                counter += 1
+                slug_candidate = f"{base}-{counter}"
+
+            self.slug = slug_candidate
+
+        super().save(*args, **kwargs)
 
 
 class SubjectMaterial(models.Model):
