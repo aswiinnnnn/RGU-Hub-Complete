@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,6 +47,8 @@ INSTALLED_APPS = [
     'django_filters',
     'resources',
     'recruitment',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 REST_FRAMEWORK = {
@@ -140,3 +145,11 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+
+cloudinary.config(
+    cloud_name="dny4c1xm1",
+    api_key="197496735553518",
+    api_secret="cOosAf8aBcv-6qm40W_maKeC3B0",
+    secure=True
+)

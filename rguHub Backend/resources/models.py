@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
-
+from cloudinary.models import CloudinaryField
 
 class Program(models.Model):
     """Represents a program/course (e.g., B.Sc Nursing, BPT)."""
@@ -144,22 +144,14 @@ class MaterialType(models.Model):
 
 
 class SubjectMaterial(models.Model):
-    """Stores URLs for study materials related to a Subject."""
-    id = models.AutoField(primary_key=True)
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, related_name="materials")
-    material_type = models.ForeignKey(MaterialType, on_delete=models.CASCADE, related_name="materials", null=True, blank=True)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    url = models.URLField(help_text="Direct URL to the study material")
-    description = models.TextField(blank=True)
-    year = models.PositiveSmallIntegerField(null=True, blank=True, help_text="Year for PYQs and time-sensitive materials")
-    month = models.CharField(max_length=20, blank=True, null=True, help_text="Month for PYQs (e.g., 'July', 'December')")
+    file = models.FileField(upload_to="uploads/")   # Temporary storage before uploading to Cloudinary
+    file_type = models.CharField(max_length=20, blank=True, null=True)
+    file_size = models.FloatField(blank=True, null=True, help_text="Size in KB")
+    cloudinary_url = models.URLField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        ordering = ["-year", "-created_at"]
-
-    def __str__(self) -> str:
-        if self.year and self.month:
-            return f"{self.subject.code} - {self.title} ({self.month} {self.year})"
-        return f"{self.subject.code} - {self.title}"
+    def __str__(self):
+        return self.title

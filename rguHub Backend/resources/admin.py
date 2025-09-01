@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import Program, Syllabus, Term, Subject, SubjectMaterial
+import os
+import cloudinary.uploader
 
 
 @admin.register(Program)
@@ -31,8 +33,26 @@ class SubjectAdmin(admin.ModelAdmin):
 
 @admin.register(SubjectMaterial)
 class SubjectMaterialAdmin(admin.ModelAdmin):
-    list_display = ("title", "subject", "is_active", "created_at")
+    list_display = ("title", "subject", "file_type", "file_size", "cloudinary_url", "is_active", "created_at")
     list_filter = ("is_active", "subject__term__syllabus__program")
     search_fields = ("title", "subject__name", "subject__code")
+
+    def save_model(self, request, obj, form, change):
+        # If file uploaded
+        if obj.file:
+            file_name = obj.file.name
+            obj.title = os.path.splitext(file_name)[0]  # default title = filename
+            obj.file_type = os.path.splitext(file_name)[1].replace(".", "").upper()
+
+            # Calculate size in KB
+            obj.file_size = round(obj.file.size / 1024, 2)
+
+            # Upload to cloudinary
+            upload_result = cloudinary.uploader.upload(obj.file, resource_type="auto")
+
+            # Save cloudinary URL
+            obj.cloudinary_url = upload_result.get("secure_url")
+
+        super().save_model(request, obj, form, change)
 
 # Register your models here.
