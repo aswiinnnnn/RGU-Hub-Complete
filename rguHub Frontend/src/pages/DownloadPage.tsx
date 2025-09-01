@@ -28,7 +28,7 @@ const DownloadPage = () => {
     fetch(`${API_BASE_URL}/materials/?subject=${subjectId}`)
       .then(res => res.json())
       .then(data => {
-        setDownloads(data);
+        setDownloads(data.results);
         if (data.length > 0) setSubjectName(data[0].subject?.name || "");
       });
   }, [subjectId]);

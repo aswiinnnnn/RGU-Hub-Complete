@@ -78,7 +78,7 @@ const SemesterMaterialSelection = () => {
       .then(res => res.json())
       .then(data => {
         console.log("[SemesterMaterialSelection] Material types:", data);
-        setMaterialTypes(data);
+        setMaterialTypes(data.results);
       })
       .catch(err => {
         console.error("[SemesterMaterialSelection] Error fetching material types:", err);
@@ -109,7 +109,7 @@ const SemesterMaterialSelection = () => {
       })
       .then(data => {
         console.log("[SemesterMaterialSelection] API Response data:", data);
-        setMaterials(data);
+        setMaterials(data.results);
         setLoading(false);
       })
       .catch(error => {
@@ -285,7 +285,6 @@ const SemesterMaterialSelection = () => {
             key={material.id}
             title={material.title}
             type="PDF"
-            size="Unknown"
             uploadDate={new Date(material.created_at).toLocaleDateString()}
             downloadUrl={material.url}
           />
@@ -307,7 +306,7 @@ const SemesterMaterialSelection = () => {
 
 // Helper function to get icon component
 const getIconComponent = (iconName: string) => {
-  const iconMap: { [key: string]: any } = {
+  const iconMap: { [key: string]: import('lucide-react').LucideIcon } = {
     'BookOpen': BookOpen,
     'FileText': FileText,
     'HelpCircle': HelpCircle,

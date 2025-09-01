@@ -11,8 +11,13 @@ import { BookOpen } from "lucide-react";
 
 type Subject = {
   id: number;
+  code: string;
   name: string;
-  // Add other fields if needed
+  subject_type: string;
+  slug: string;
+  term: number;
+  term_slug: string;
+  materials_count: number;
 };
 
 const SemesterSubjectSelection = () => {
@@ -49,7 +54,7 @@ const SemesterSubjectSelection = () => {
       })
       .then(data => {
         console.log("[SemesterSubjectSelection] Fetched subjects:", data);
-        setSubjects(data);
+    setSubjects(data.results);
         setLoading(false);
       })
       .catch(err => {

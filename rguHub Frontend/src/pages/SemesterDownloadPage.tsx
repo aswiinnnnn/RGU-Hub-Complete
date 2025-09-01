@@ -64,7 +64,7 @@ const SemesterDownloadPage = () => {
       })
       .then(data => {
         console.log("[SemesterDownloadPage] Fetched materials:", data);
-        setMaterials(data);
+        setMaterials(data.results);
         setLoading(false);
       })
       .catch(err => {
@@ -167,7 +167,6 @@ const SemesterDownloadPage = () => {
                 key={material.id}
                 title={material.title}
                 type="PDF"
-                size="Unknown"
                 uploadDate={new Date(material.created_at).toLocaleDateString()}
                 downloadUrl={material.url}
               />

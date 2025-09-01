@@ -32,25 +32,29 @@ const SubjectSelection = () => {
 
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
-    let apiUrl = `${API_BASE_URL}/subjects/?course=${course}`;
-    if (type === "year") {
-      apiUrl += `&year=${value}`;
-    } else if (type === "sem") {
-      apiUrl += `&sem=${value}`;
-    }
-    console.log("API URL:", apiUrl);
+    const fetchSubjects = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/subjects/?course=${course}&sem=${value}`);
+        const data = await res.json();
+        // Ensure subjects is always an array
+        setSubjects(Array.isArray(data.results) ? data.results : []);
+      } catch (err) {
+        console.error(err);
+        setSubjects([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    fetch(apiUrl)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Fetched subjects:", data);
-        setSubjects(data);
-      })
-      .catch((err) => console.error("Error fetching subjects:", err))
-      .finally(() => setLoading(false));
-  }, [course, type, value]);
+    fetchSubjects();
+  }, [course, value]);
+
+
+
+
 
   return (
     <div className="min-h-screen bg-gradient-hero">
@@ -83,7 +87,7 @@ const SubjectSelection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
           {loading ? (
             <p className="text-muted-foreground">Loading subjects...</p>
-          ) : subjects.length > 0 ? (
+          ) : Array.isArray(subjects) && subjects.length > 0 ? (
             subjects.map((subject) => (
               <SubjectCard
                 key={subject.id}
