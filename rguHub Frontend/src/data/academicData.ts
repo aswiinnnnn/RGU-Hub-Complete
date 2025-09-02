@@ -207,6 +207,6 @@ export const materialTypes = [
     title: "Practical Resources",
     description: "Clinical logbook, skill checklists, lab guides",
     icon: "Stethoscope",
-    color: "destructive"
+    color: "primary"
   }
 ];

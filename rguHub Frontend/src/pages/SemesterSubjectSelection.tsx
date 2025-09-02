@@ -54,7 +54,8 @@ const SemesterSubjectSelection = () => {
       })
       .then(data => {
         console.log("[SemesterSubjectSelection] Fetched subjects:", data);
-    setSubjects(data.results);
+    setSubjects(data || []); // use the data array directly
+
         setLoading(false);
       })
       .catch(err => {

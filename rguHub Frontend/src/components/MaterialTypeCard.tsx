@@ -23,7 +23,7 @@ export const MaterialTypeCard = ({
       className="group bg-gradient-card hover:bg-card-hover border border-border rounded-2xl p-6 shadow-card hover:shadow-medium transition-all duration-300 cursor-pointer"
     >
       <div className="flex items-start justify-between mb-4">
-        <div className={`p-3 bg-${color}/10 rounded-xl group-hover:bg-${color}/20 transition-colors`}>
+        <div className={`p-3 bg-green/10 rounded-xl group-hover:bg-${color}/20 transition-colors`}>
           <Icon className={`w-7 h-7 text-primary`} />
         </div>
         <span className="px-3 py-1 bg-primary text-secondary-foreground text-sm font-semibold rounded-full">

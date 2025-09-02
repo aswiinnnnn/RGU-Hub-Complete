@@ -1,111 +1,84 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { RecruitmentCard } from "@/components/RecruitmentCard";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { NoticeBar } from "@/components/NoticeBar";
 import { Button } from "@/components/ui/button";
-import { Briefcase, GraduationCap, Users } from "lucide-react";
+import { GraduationCap, Users, ArrowLeft } from "lucide-react";
+import AppHeader from "@/components/AppHeader";
+import { useNavigate } from "react-router-dom";
 
-// Mock data - in a real app, this would come from an API
-const recruitmentData = [
-  {
-    id: 1,
-    companyName: "Apollo Hospitals",
-    position: "Staff Nurse",
-    location: "Delhi",
-    jobType: 'FT' as const,
-    description: "Looking for dedicated nursing professionals to join our critical care unit. Excellent growth opportunities and comprehensive benefits package.",
-    requirements: "BSc Nursing degree, valid nursing license, minimum 1 year experience preferred",
-    salary: "₹25,000 - ₹35,000/month",
-    deadline: "2025-02-15",
-    applyLink: "https://example.com/apply",
-    postedOn: "2025-01-20",
-    branch: 'bsc-nursing' as const
-  },
-  {
-    id: 2,
-    companyName: "Fortis Healthcare",
-    position: "Nursing Intern",
-    location: "Mumbai",
-    jobType: 'IN' as const,
-    description: "6-month internship program for final year BSc Nursing students. Hands-on experience in various departments.",
-    requirements: "Final year BSc Nursing student, good communication skills",
-    salary: "₹8,000/month stipend",
-    deadline: "2025-02-28",
-    applyLink: "https://example.com/apply",
-    postedOn: "2025-01-18",
-    branch: 'bsc-nursing' as const
-  },
-  {
-    id: 3,
-    companyName: "Max Healthcare",
-    position: "Physiotherapist",
-    location: "Bangalore",
-    jobType: 'FT' as const,
-    description: "Join our rehabilitation center as a full-time physiotherapist. Work with diverse patient population.",
-    requirements: "BSc Physiotherapy, BPT degree, registration with state council",
-    salary: "₹30,000 - ₹40,000/month",
-    deadline: "2025-01-10",
-    applyLink: "https://example.com/apply",
-    postedOn: "2024-12-20",
-    branch: 'bsc-physiotherapy' as const
-  },
-  {
-    id: 4,
-    companyName: "Sports Injury Centre",
-    position: "Junior Physiotherapist",
-    location: "Chennai",
-    jobType: 'PT' as const,
-    description: "Part-time position for sports injury rehabilitation. Flexible hours, perfect for continuing education.",
-    requirements: "BSc Physiotherapy degree, interest in sports medicine",
-    salary: "₹15,000/month",
-    deadline: "2025-03-01",
-    applyLink: "https://example.com/apply",
-    postedOn: "2025-01-22",
-    branch: 'bsc-physiotherapy' as const
-  },
-  {
-    id: 5,
-    companyName: "AIIMS",
-    position: "ICU Nurse",
-    location: "New Delhi",
-    jobType: 'FT' as const,
-    description: "Critical care nursing position in India's premier medical institution. Excellent learning environment.",
-    requirements: "BSc Nursing, ICU experience preferred, BLS certification",
-    salary: "₹40,000 - ₹50,000/month",
-    deadline: "2025-02-20",
-    applyLink: "https://example.com/apply",
-    postedOn: "2025-01-15",
-    branch: 'bsc-nursing' as const
-  }
-];
+
+
+
+type RecruitmentApiType = {
+  id: number;
+  program_name: string;
+  company_name: string;
+  position: string;
+  location: string;
+  job_type: 'FT' | 'PT' | 'IN';
+  description: string;
+  requirements: string;
+  salary?: string | null;
+  deadline: string;
+  apply_link: string;
+  posted_on: string;
+  program: number;
+};
+
+
+const classifyBranch = (programName: string): 'bsc-nursing' | 'bsc-physiotherapy' => {
+  if (programName.toLowerCase().includes('nursing')) return 'bsc-nursing';
+  return 'bsc-physiotherapy';
+};
+
 
 const Recruitment = () => {
+  const navigate = useNavigate();
   const [filter, setFilter] = useState<'all' | 'bsc-nursing' | 'bsc-physiotherapy'>('all');
+  const [recruitmentData, setRecruitmentData] = useState<(RecruitmentApiType & { branch: 'bsc-nursing' | 'bsc-physiotherapy' })[]>([]);
+  const [activeJobsCount, setActiveJobsCount] = useState(0);
 
-  const filteredJobs = recruitmentData.filter(job => {
-    if (filter === 'all') return true;
-    return job.branch === filter;
-  });
+  useEffect(() => {
+    fetch("http://192.168.228.92:8000/recruitments/")
+      .then(res => res.json())
+      .then(data => {
+        // If API returns { results: [...] }
+        const jobs = (data.results ?? data).map((job: RecruitmentApiType) => ({
+          ...job,
+          branch: classifyBranch(job.program_name)
+        }));
+        setRecruitmentData(jobs);
+        setActiveJobsCount(jobs.length);
+      });
+  }, []);
 
-  const activeJobsCount = filteredJobs.filter(job => new Date(job.deadline) >= new Date()).length;
+  const handleBack = () => {
+    navigate('/');
+  };
+
+  const filteredJobs = recruitmentData
+    .filter(job => job.branch === 'bsc-nursing' || job.branch === 'bsc-physiotherapy')
+    .filter(job => {
+      if (filter === 'all') return true;
+      return job.branch === filter;
+    });
 
   return (
     <div className="min-h-screen bg-gradient-hero">
-      <NoticeBar />
-      
-      <div className="container mx-auto px-4 py-8">
-        <Breadcrumbs 
-          items={[
-            { label: "Home", path: "/" },
-            { label: "Recruitment" }
-          ]} 
-        />
-
-        {/* Header */}
-        <div className="text-center mb-8 animate-fade-in">
-          <div className="inline-flex items-center justify-center p-3 bg-primary/10 rounded-2xl mb-4">
-            <Briefcase className="w-10 h-10 text-primary" />
-          </div>
+      <AppHeader />
+      <div className="container mx-auto px-4 pb-8">
+        <Breadcrumbs items={[{ label: "Recruitment" }]} />
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleBack}
+          className="mt-3 px-3 py-1 text-black text-sm font-semibold mb-5 border-[0.7px] border-black/20 shadow-nav rounded-"
+        >
+          <ArrowLeft className="w-4 h-4 mr-1" />
+          Back to Home
+        </Button>
+        <div className="text-center mb-8 animate-fade-in pt-0">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
             Recruitment Portal
           </h1>
@@ -117,8 +90,6 @@ const Recruitment = () => {
             <span className="text-sm font-medium text-success">{activeJobsCount} Active Opportunities</span>
           </div>
         </div>
-
-        {/* Filter Buttons */}
         <div className="flex flex-wrap justify-center gap-3 mb-8 animate-fade-in">
           <Button
             variant={filter === 'all' ? 'default' : 'outline'}
@@ -145,14 +116,24 @@ const Recruitment = () => {
             BSc Physiotherapy
           </Button>
         </div>
-
-        {/* Job Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
           {filteredJobs.map(job => (
-            <RecruitmentCard key={job.id} {...job} />
+            <RecruitmentCard
+              key={job.id}
+              companyName={job.company_name}
+              position={job.position}
+              location={job.location}
+              jobType={job.job_type}
+              description={job.description}
+              requirements={job.requirements}
+              salary={job.salary ?? ''}
+              deadline={job.deadline}
+              applyLink={job.apply_link}
+              postedOn={job.posted_on}
+              branch={job.branch}
+            />
           ))}
         </div>
-
         {filteredJobs.length === 0 && (
           <div className="text-center py-12">
             <p className="text-muted-foreground">No opportunities found for the selected filter.</p>

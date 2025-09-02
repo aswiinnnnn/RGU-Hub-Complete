@@ -54,7 +54,7 @@ export const RecruitmentCard = ({
   const isLongRequirements = requirements.length > 150;
 
   return (
-    <div className={`bg-card border border-border rounded-xl p-6 shadow-card hover:shadow-medium hover:-translate-y-1 transition-all duration-300 relative group`}>
+    <div className={` group bg-card border border-border rounded-xl p-5 shadow-card hover:shadow-medium transition-all duration-300 relative cursor-pointer hover:border-primary`}>
       {/* Status Badge */}
       <div className="absolute top-4 right-4">
         {isActive ? (
@@ -154,31 +154,31 @@ export const RecruitmentCard = ({
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-between pt-4 border-t border-border">
-        <div className="flex flex-col gap-1">
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <Calendar className="w-3 h-3" />
-            Deadline: {new Date(deadline).toLocaleDateString()}
-          </div>
-          {isActive && daysLeft <= 7 && (
-            <div className="flex items-center gap-1 text-xs text-warning">
-              <Clock className="w-3 h-3" />
-              {daysLeft} days left
-            </div>
-          )}
-        </div>
-
-        <Button
-          variant={isActive ? "default" : "secondary"}
-          size="sm"
-          className="gap-1"
-          onClick={() => window.open(applyLink, '_blank')}
-          disabled={!isActive}
-        >
-          Apply Now
-          <ExternalLink className="w-3 h-3" />
-        </Button>
+       <div className="mt-auto flex items-center justify-between pt-4 border-t border-border">
+    <div className="flex flex-col gap-1">
+      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+        <Calendar className="w-3 h-3" />
+        Deadline: {new Date(deadline).toLocaleDateString()}
       </div>
+      {isActive && daysLeft <= 7 && (
+        <div className="flex items-center gap-1 text-xs text-warning">
+          <Clock className="w-3 h-3" />
+          {daysLeft} days left
+        </div>
+      )}
     </div>
+
+    <Button
+      variant={isActive ? "default" : "grey"}
+      size="sm"
+      className="gap-1"
+      onClick={() => window.open(applyLink, '_blank')}
+      disabled={!isActive}
+    >
+      Apply Now
+      <ExternalLink className="w-3 h-3" />
+    </Button>
+  </div>
+</div>
   );
 };

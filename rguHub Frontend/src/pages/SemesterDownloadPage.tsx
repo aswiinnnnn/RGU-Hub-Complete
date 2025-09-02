@@ -64,7 +64,7 @@ const SemesterDownloadPage = () => {
       })
       .then(data => {
         console.log("[SemesterDownloadPage] Fetched materials:", data);
-        setMaterials(data.results);
+        setMaterials(data);
         setLoading(false);
       })
       .catch(err => {

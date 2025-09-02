@@ -40,7 +40,7 @@ const SubjectSelection = () => {
         const res = await fetch(`${API_BASE_URL}/subjects/?course=${course}&sem=${value}`);
         const data = await res.json();
         // Ensure subjects is always an array
-        setSubjects(Array.isArray(data.results) ? data.results : []);
+        setSubjects(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error(err);
         setSubjects([]);

@@ -78,7 +78,7 @@ const SemesterMaterialSelection = () => {
       .then(res => res.json())
       .then(data => {
         console.log("[SemesterMaterialSelection] Material types:", data);
-        setMaterialTypes(data.results);
+        setMaterialTypes(data);
       })
       .catch(err => {
         console.error("[SemesterMaterialSelection] Error fetching material types:", err);
@@ -109,7 +109,7 @@ const SemesterMaterialSelection = () => {
       })
       .then(data => {
         console.log("[SemesterMaterialSelection] API Response data:", data);
-        setMaterials(data.results);
+        setMaterials(data);
         setLoading(false);
       })
       .catch(error => {

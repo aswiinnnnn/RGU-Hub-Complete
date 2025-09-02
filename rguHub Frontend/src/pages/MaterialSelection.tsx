@@ -57,7 +57,7 @@ const MaterialSelection = () => {
       description: "Clinical logbook, skill checklists, lab guides",
       icon: Stethoscope,
       count: 6,
-      color: "destructive"
+      color: "primary"
     }
   ];
 

@@ -148,9 +148,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True
 
 
-cloudinary.config(
-    cloud_name="dny4c1xm1",
-    api_key="197496735553518",
-    api_secret="cOosAf8aBcv-6qm40W_maKeC3B0",
-    secure=True
-)
+
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": "dny4c1xm1",
+    "API_KEY": "197496735553518",
+    "API_SECRET": "cOosAf8aBcv-6qm40W_maKeC3B0",
+}

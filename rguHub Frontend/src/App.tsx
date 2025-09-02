@@ -16,6 +16,7 @@ import DownloadPage from "./pages/DownloadPage";
 import SemesterDownloadPage from "./pages/SemesterDownloadPage";
 import NotFound from "./pages/NotFound";
 import CourseSelection from "./pages/CourseSelection.tsx"; 
+import Recruitment from "./pages/Recruitment";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/exam-session/:type/:yearId/:subjectId/:materialType" element={<ExamSessionSelection />} />
           <Route path="/download/:yearId/:subjectId/:materialType" element={<DownloadPage />} />
           <Route path="/semester-download/:semesterId/:subjectId/:materialType" element={<SemesterDownloadPage />} />
+          <Route path="/recruitment" element={<Recruitment />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

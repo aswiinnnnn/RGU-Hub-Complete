@@ -3,7 +3,7 @@ from .models import Subject, SubjectMaterial
 
 
 class SubjectFilter(django_filters.FilterSet):
-    program_id = django_filters.UUIDFilter(field_name="term__syllabus__program_id")
+    program_id = django_filters.UUIDFilter(field_name="term_syllabus_program_id")
     syllabus_id = django_filters.UUIDFilter(field_name="term__syllabus_id")
     term_id = django_filters.UUIDFilter(field_name="term_id")
     subject_type = django_filters.CharFilter(field_name="subject_type")
@@ -14,11 +14,11 @@ class SubjectFilter(django_filters.FilterSet):
 
 
 class SubjectMaterialFilter(django_filters.FilterSet):
-    program_id = django_filters.UUIDFilter(field_name="subject__term__syllabus__program_id")
-    syllabus_id = django_filters.UUIDFilter(field_name="subject__term__syllabus_id")
-    term_number = django_filters.NumberFilter(field_name="subject__term__term_number")
+    program_id = django_filters.UUIDFilter(field_name="subject_termsyllabus_program_id")
+    syllabus_id = django_filters.UUIDFilter(field_name="subject_term_syllabus_id")
+    term_number = django_filters.NumberFilter(field_name="subject_term_term_number")
     term_type = django_filters.ChoiceFilter(
-        field_name="subject__term__term_type",
+        field_name="subject_term_term_type",
         choices=(
             ("SEMESTER", "Semester"),
             ("YEAR", "Year"),
@@ -28,5 +28,3 @@ class SubjectMaterialFilter(django_filters.FilterSet):
     class Meta:
         model = SubjectMaterial
         fields = ["program_id", "syllabus_id", "term_number", "term_type"]
-
-

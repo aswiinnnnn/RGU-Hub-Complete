@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
-from cloudinary.models import CloudinaryField
+
 
 class Program(models.Model):
     """Represents a program/course (e.g., B.Sc Nursing, BPT)."""
@@ -12,7 +12,7 @@ class Program(models.Model):
     class Meta:
         ordering = ["name"]
 
-    def __str__(self) -> str:
+    def _str_(self) -> str:
         return f"{self.name}"
 
 
@@ -28,7 +28,7 @@ class Syllabus(models.Model):
         ordering = ["program__short_name", "name"]
         unique_together = ("program", "name")
 
-    def __str__(self) -> str:
+    def _str_(self) -> str:
         return f"{self.program.name} - {self.name}"
 
 
@@ -48,9 +48,9 @@ class Term(models.Model):
 
     class Meta:
         ordering = ["syllabus__program__short_name", "syllabus__name", "term_number"]
-        unique_together = ("syllabus", "term_number")
 
-    def __str__(self) -> str:
+
+    def _str_(self) -> str:
         label = self.name or f"{self.get_term_type_display()} {self.term_number}"
         return f"{self.syllabus} - {label}"
 
@@ -71,14 +71,14 @@ class Subject(models.Model):
 
     class Meta:
         ordering = [
-            "term__syllabus__program__short_name",
-            "term__syllabus__name",
-            "term__term_number",
-            "code",
-        ]
+        "term__syllabus__program__short_name",  # Program short name
+        "term__syllabus__name",                 # Syllabus name
+        "term__term_number",
+        "code",]
+
         unique_together = ("term", "code")
 
-    def __str__(self) -> str:
+    def _str_(self) -> str:
         return f"{self.code} - {self.name}"
 
     def save(self, *args, **kwargs):
@@ -112,7 +112,7 @@ class Subject(models.Model):
 
             slug_candidate = base
             counter = 1
-            Model = self.__class__
+            Model = self._class_
             while Model.objects.filter(slug=slug_candidate).exclude(pk=self.pk).exists():
                 counter += 1
                 slug_candidate = f"{base}-{counter}"
@@ -134,7 +134,7 @@ class MaterialType(models.Model):
     class Meta:
         ordering = ["name"]
 
-    def __str__(self) -> str:
+    def _str_(self) -> str:
         return self.name
 
     def save(self, *args, **kwargs):
@@ -143,15 +143,35 @@ class MaterialType(models.Model):
         super().save(*args, **kwargs)
 
 
+from django.db import models
+from cloudinary_storage.storage import MediaCloudinaryStorage
+import os
+
 class SubjectMaterial(models.Model):
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    """Stores study materials uploaded to Cloudinary with metadata"""
+    id = models.AutoField(primary_key=True)
+    subject = models.ForeignKey("Subject", on_delete=models.CASCADE, related_name="materials")
+    material_type = models.ForeignKey("MaterialType", on_delete=models.CASCADE, related_name="materials", null=True, blank=True)
     title = models.CharField(max_length=255)
-    file = models.FileField(upload_to="uploads/")   # Temporary storage before uploading to Cloudinary
-    file_type = models.CharField(max_length=20, blank=True, null=True)
-    file_size = models.FloatField(blank=True, null=True, help_text="Size in KB")
-    cloudinary_url = models.URLField(blank=True, null=True)
+    file = models.FileField(storage=MediaCloudinaryStorage(), upload_to="materials/")
+    url = models.URLField(blank=True, help_text="Auto-filled Cloudinary URL")
+    description = models.TextField(blank=True)
+    year = models.PositiveSmallIntegerField(null=True, blank=True, help_text="Year for PYQs and time-sensitive materials")
+    month = models.CharField(max_length=20, blank=True, null=True, help_text="Month for PYQs (e.g., 'July', 'December')")
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.title
+    class Meta:
+        ordering = ["-year", "-created_at"]
+
+    def save(self, *args, **kwargs):
+        # auto-fill title and url
+        if self.file:
+            self.title = os.path.basename(self.file.name)
+            self.url = self.file.url
+        super().save(*args, **kwargs)
+
+    def _str_(self) -> str:
+        if self.year and self.month:
+            return f"{self.subject.code} - {self.title} ({self.month} {self.year})"
+        return f"{self.subject.code} - {self.title}"

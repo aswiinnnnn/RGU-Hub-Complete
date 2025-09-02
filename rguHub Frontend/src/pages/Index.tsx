@@ -16,7 +16,8 @@ import {
   Users,
   Download,
   BookMarked,
-  Target
+  Target,
+  Briefcase
 } from "lucide-react";
 
 const Index = () => {
@@ -145,7 +146,37 @@ const Index = () => {
             />
           ))}
         </div>
-      </section>      
+      </section>    
+
+        {/* Recruitment Section */}
+      <section className="container mx-auto px-4 py-12">
+        <div className="max-w-4xl mx-auto">
+          <div 
+            onClick={() => navigate('/recruitment')}
+            className="group bg-gradient-to-r from-primary/10 via-primary/5 to-success/10 hover:from-primary/20 hover:via-primary/10 hover:to-success/20 border border-primary/20 rounded-2xl p-8 md:p-12 shadow-medium hover:shadow-lg transition-all duration-300 cursor-pointer animate-fade-in"
+          >
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <div className="flex-shrink-0">
+                <div className="p-4 bg-gradient-primary rounded-2xl shadow-medium group-hover:scale-110 transition-transform">
+                  <Briefcase className="w-12 h-12 text-primary-foreground" />
+                </div>
+              </div>
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+                  Recruitment Portal
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  Discover placement opportunities and internships for BSc Nursing & Physiotherapy students
+                </p>
+                <div className="inline-flex items-center gap-2 text-primary font-medium">
+                  Browse Opportunities
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Announcements Section */}
       <section className="container mx-auto px-4 py-12">
