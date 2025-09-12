@@ -54,7 +54,8 @@ export const RecruitmentCard = ({
   const isLongRequirements = requirements.length > 150;
 
   return (
-    <div className={` group bg-card border border-border rounded-xl p-5 shadow-card hover:shadow-medium transition-all duration-300 relative cursor-pointer hover:border-primary`}>
+    <div className={`group bg-card border border-border rounded-xl p-5 shadow-card hover:shadow-medium transition-all duration-300 relative cursor-pointer hover:border-primary flex flex-col h-full`}
+>
       {/* Status Badge */}
       <div className="absolute top-4 right-4">
         {isActive ? (

@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 // import { NoticeBar } from "@/components/NoticeBar";
 import { PosterCarousel } from "@/components/PosterCarousel";
 import AppHeader from "@/components/AppHeader";
 import { HighlightCard } from "@/components/HighlightCard";
-import { AnnouncementCard } from "@/components/AnnouncementCard";
 import { Button } from "@/components/ui/button";
 import { 
   BookOpen, 
@@ -62,28 +62,19 @@ const Index = () => {
     }
   ];
 
-  const announcements = [
-    {
-      type: "added" as const,
-      title: "3rd Year Child Health Nursing Notes",
-      date: "Aug 2025"
-    },
-    {
-      type: "updated" as const,
-      title: "1st Year Applied Anatomy PYQ",
-      date: "July 2024"
-    },
-    {
-      type: "added" as const,
-      title: "2nd Year Pharmacology Question Bank",
-      date: "Aug 2025"
-    },
-    {
-      type: "updated" as const,
-      title: "4th Year Clinical Logbook Format",
-      date: "Aug 2025"
-    }
-  ];
+
+  type LatestUpdate = {
+    type: "Recruitment" | "Material";
+    title: string;
+    created_at: string;
+  };
+
+  const [latestUpdates, setLatestUpdates] = useState<LatestUpdate[]>([]);
+  useEffect(() => {
+    fetch("http://192.168.228.92:8000/latest-updates/")
+      .then(res => res.json())
+      .then(data => setLatestUpdates(data));
+  }, []);
 
 
 
@@ -149,11 +140,11 @@ const Index = () => {
       </section>    
 
         {/* Recruitment Section */}
-      <section className="container mx-auto px-4 py-12">
+      <section className="container mx-auto px-4 pb-6 pt-12">
         <div className="max-w-4xl mx-auto">
           <div 
             onClick={() => navigate('/recruitment')}
-            className="group bg-gradient-to-r from-primary/10 via-primary/5 to-success/10 hover:from-primary/20 hover:via-primary/10 hover:to-success/20 border border-primary/20 rounded-2xl p-8 md:p-12 shadow-medium hover:shadow-lg transition-all duration-300 cursor-pointer animate-fade-in"
+            className="group bg-gradient-to-r from-primary/10 via-primary/5 to-success/10 hover:from-primary/20 hover:via-primary/10 hover:to-success/20 border border-primary rounded-2xl p-8 md:p-12 shadow-medium hover:shadow-lg transition-all duration-300 cursor-pointer animate-fade-in"
           >
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="flex-shrink-0">
@@ -178,26 +169,36 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Announcements Section */}
+
+      {/* Latest Updates Section (API-driven) */}
       <section className="container mx-auto px-4 py-12">
         <div className="text-center mb-10 animate-fade-in">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
             Latest Updates
           </h2>
           <p className="text-muted-foreground">
-            Recently added and updated study materials
+            Recently added and updated study materials & recruitments
           </p>
         </div>
-        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto animate-fade-in">
-          {announcements.map((announcement, index) => (
-            <AnnouncementCard
-              key={index}
-              type={announcement.type}
-              title={announcement.title}
-              date={announcement.date}
-            />
-          ))}
+          {latestUpdates.map((item, idx) => {
+            const isRecruitment = item.type === "Recruitment";
+            const icon = isRecruitment ? <Briefcase className="w-6 h-6 text-success mr-2" /> : <BookOpen className="w-6 h-6 text-primary mr-2" />;
+            const formattedDate = new Date(item.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+            return (
+              <div
+                key={idx}
+                className="flex items-center bg-gradient-card rounded-xl p-4 border border-border shadow-sm cursor-pointer hover:shadow-md transition-all"
+                onClick={() => navigate(isRecruitment ? "/recruitment" : "/download")}
+              >
+                {icon}
+                <div className="flex-1">
+                  <div className="font-semibold text-foreground text-lg mb-1">{item.title}</div>
+                  <div className="text-xs text-muted-foreground">{isRecruitment ? "Recruitment" : "Material"} • {formattedDate}</div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
