@@ -6,8 +6,7 @@ import { Button } from "@/components/ui/button";
 import { GraduationCap, Users, ArrowLeft } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import { useNavigate } from "react-router-dom";
-
-
+import { API_BASE_URL } from "@/config/api";
 
 
 type RecruitmentApiType = {
@@ -40,7 +39,7 @@ const Recruitment = () => {
   const [activeJobsCount, setActiveJobsCount] = useState(0);
 
   useEffect(() => {
-    fetch("http://192.168.228.92:8000/recruitments/")
+    fetch(`${API_BASE_URL}/recruitments/`)
       .then(res => res.json())
       .then(data => {
         // If API returns { results: [...] }

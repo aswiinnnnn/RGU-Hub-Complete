@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { PosterCarousel } from "@/components/PosterCarousel";
 import AppHeader from "@/components/AppHeader";
 import { HighlightCard } from "@/components/HighlightCard";
+import { API_BASE_URL } from "@/config/api";
 import { Button } from "@/components/ui/button";
 import { 
   BookOpen, 
@@ -71,9 +72,16 @@ const Index = () => {
 
   const [latestUpdates, setLatestUpdates] = useState<LatestUpdate[]>([]);
   useEffect(() => {
-    fetch("http://192.168.228.92:8000/latest-updates/")
-      .then(res => res.json())
-      .then(data => setLatestUpdates(data));
+    fetch(`${API_BASE_URL}/latest-updates/`)
+      .then(res => {
+        if (!res.ok) throw new Error(`Failed to load latest updates: ${res.status}`);
+        return res.json();
+      })
+      .then(data => setLatestUpdates(data.results ?? data))
+      .catch(err => {
+        // eslint-disable-next-line no-console
+        console.error(err);
+      });
   }, []);
 
 

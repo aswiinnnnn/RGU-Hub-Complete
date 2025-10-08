@@ -1,25 +1,43 @@
 """
-URL configuration for rguHub project.
+RGU Hub Backend - Main URL Configuration
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+This is the main URL configuration for the RGU Hub Django project.
+It includes URL patterns from all Django apps and the admin interface.
+
+URL Patterns:
+- /admin/ - Django admin interface
+- / - Resources app URLs (materials, subjects, material-types)
+- / - Recruitment app URLs (recruitments, latest-updates)
+
+Complete API Endpoints:
+- GET /materials/ - List all study materials
+- GET /materials/?subject=slug - Filter materials by subject
+- GET /materials/?type=slug - Filter materials by type
+- GET /subjects/ - List all subjects
+- GET /subjects/?course=BSCN - Filter subjects by program
+- GET /subjects/?course=BSCN&sem=1 - Filter by program and semester
+- GET /material-types/ - List all material types
+- GET /recruitments/ - List all job postings
+- GET /recruitments/?program=BSCN - Filter jobs by program
+- GET /latest-updates/ - Get recent materials and jobs
+
+Admin Interface:
+- /admin/ - Django admin for managing data
+
+Author: RGU Hub Development Team
+Last Updated: 2025
 """
-# rguHub/urls.py
+
 from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+    # Django admin interface
     path('admin/', admin.site.urls),
+    
+    # Resources app URLs (materials, subjects, material-types)
     path('', include('resources.urls')),      
+    
+    # Recruitment app URLs (recruitments, latest-updates)
     path('', include('recruitment.urls')),     
 ]
