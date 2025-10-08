@@ -13,14 +13,13 @@
  * Route Structure:
  * - /: Homepage with latest updates
  * - /course: Course selection (BSCN, BPT, etc.)
- * - /batch: Batch selection (2022-26, etc.)
- * - /year: Year selection (1st Year, 2nd Year, etc.)
+ * - [REMOVED] Batch and Year flows are no longer used
  * - /semester: Semester selection (1st Sem, 2nd Sem, etc.)
- * - /subjects/:yearId: Subject selection for year-based programs
+ * - [REMOVED] Year-based subject flow
  * - /semester-subjects/:semesterId: Subject selection for semester-based programs
- * - /materials/:yearId/:subjectId: Material selection for year-based programs
+ * - [REMOVED] Year-based material selection
  * - /semester-materials/:semesterId/:subjectId: Material selection for semester-based programs
- * - /download/:yearId/:subjectId/:materialType: Download page for year-based programs
+ * - [REMOVED] Year-based download page
  * - /semester-download/:semesterId/:subjectId/:materialType: Download page for semester-based programs
  * - /recruitment: Job postings and opportunities
  * - /*: 404 Not Found page
@@ -37,15 +36,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Page Components
 import Index from "./pages/Index";
-import BatchSelection from "./pages/BatchSelection";
-import YearSelection from "./pages/YearSelection";
 import SemesterSelection from "./pages/SemesterSelection";
-import SubjectSelection from "./pages/SubjectSelection";
 import SemesterSubjectSelection from "./pages/SemesterSubjectSelection";
-import MaterialSelection from "./pages/MaterialSelection";
 import SemesterMaterialSelection from "./pages/SemesterMaterialSelection";
-import ExamSessionSelection from "./pages/ExamSessionSelection";
-import DownloadPage from "./pages/DownloadPage";
 import SemesterDownloadPage from "./pages/SemesterDownloadPage";
 import NotFound from "./pages/NotFound";
 import CourseSelection from "./pages/CourseSelection.tsx"; 
@@ -75,32 +68,14 @@ const App = () => (
           {/* Course Selection - Choose between BSCN, BPT, etc. */}
           <Route path="/course" element={<CourseSelection />} />
           
-          {/* Batch Selection - Choose academic batch (2022-26, etc.) */}
-          <Route path="/batch" element={<BatchSelection />} />
-          
-          {/* Year Selection - Choose academic year (1st Year, 2nd Year, etc.) */}
-          <Route path="/year" element={<YearSelection />} />
-          
           {/* Semester Selection - Choose semester (1st Sem, 2nd Sem, etc.) */}
           <Route path="/semester" element={<SemesterSelection />} />
-          
-          {/* Subject Selection for Year-based Programs */}
-          <Route path="/subjects/:yearId" element={<SubjectSelection />} />
           
           {/* Subject Selection for Semester-based Programs */}
           <Route path="/semester-subjects/:semesterId" element={<SemesterSubjectSelection />} />
           
-          {/* Material Selection for Year-based Programs */}
-          <Route path="/materials/:yearId/:subjectId" element={<MaterialSelection />} />
-          
           {/* Material Selection for Semester-based Programs */}
           <Route path="/semester-materials/:semesterId/:subjectId" element={<SemesterMaterialSelection />} />
-          
-          {/* Exam Session Selection - Choose exam session for PYQs */}
-          <Route path="/exam-session/:type/:yearId/:subjectId/:materialType" element={<ExamSessionSelection />} />
-          
-          {/* Download Page for Year-based Programs */}
-          <Route path="/download/:yearId/:subjectId/:materialType" element={<DownloadPage />} />
           
           {/* Download Page for Semester-based Programs */}
           <Route path="/semester-download/:semesterId/:subjectId/:materialType" element={<SemesterDownloadPage />} />

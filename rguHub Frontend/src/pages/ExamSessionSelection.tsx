@@ -27,14 +27,15 @@ const ExamSessionSelection = () => {
   const handleSessionClick = (session: { month: string; year: string }) => {
     const sessionId = `${session.month.toLowerCase()}-${session.year}`;
     if (isYearBased) {
-      navigate(`/download/${yearId}/${subjectId}/${materialType}?session=${sessionId}`);
+      // Year-based download flow removed; route to semester download as a fallback
+      navigate(`/semester-download/${yearId}/${subjectId}/${materialType}?session=${sessionId}`);
     } else {
       navigate(`/semester-download/${yearId}/${subjectId}/${materialType}?session=${sessionId}`);
     }
   };
 
   const backPath = isYearBased 
-    ? `/materials/${yearId}/${subjectId}`
+    ? `/semester-materials/${yearId}/${subjectId}`
     : `/semester-materials/${yearId}/${subjectId}`;
 
   return (
@@ -43,8 +44,8 @@ const ExamSessionSelection = () => {
       <div className="container mx-auto px-4 pt-0 pb-6">
         <Breadcrumbs 
           items={[
-            { label: "Select Batch", path: "/batch" },
-            { label: isYearBased ? "Year" : "Semester", path: isYearBased ? "/year" : "/semester" },
+            { label: "Select Course", path: "/course" },
+            { label: "Semester", path: "/semester" },
             { label: subject?.name || "" },
             { label: "Select Exam Session" }
           ]} 

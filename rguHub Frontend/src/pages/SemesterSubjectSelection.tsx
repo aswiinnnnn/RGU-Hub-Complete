@@ -29,9 +29,7 @@ const SemesterSubjectSelection = () => {
   // Get course, type, and value from location.state or fallback
   const { course = "BN", type = "sem", value = semesterId ? parseInt(semesterId) : 1 } = location.state || {};
 
-  console.log("[SemesterSubjectSelection] Selected course:", course);
-  console.log("[SemesterSubjectSelection] Curriculum type:", type);
-  console.log("[SemesterSubjectSelection] Semester value:", value);
+  // Remove debug logs for production
 
   const semesterNumber = value;
   const [subjects, setSubjects] = useState<Subject[]>([]);
@@ -40,7 +38,7 @@ const SemesterSubjectSelection = () => {
 
   useEffect(() => {
     const apiUrl = `${API_BASE_URL}/subjects/?course=${course}&sem=${semesterNumber}`;
-    console.log("[SemesterSubjectSelection] API URL:", apiUrl);
+    
     
     setLoading(true);
     setError(null);
@@ -53,25 +51,25 @@ const SemesterSubjectSelection = () => {
         return res.json();
       })
       .then(data => {
-        console.log("[SemesterSubjectSelection] Fetched subjects:", data);
+        
     setSubjects(data || []); // use the data array directly
 
         setLoading(false);
       })
       .catch(err => {
-        console.error("[SemesterSubjectSelection] API Error:", err);
+        
         setError(err.message);
         setLoading(false);
       });
   }, [course, semesterNumber]);
 
   const handleBack = () => {
-    console.log("[SemesterSubjectSelection] Back to Semesters clicked");
+    
     navigate('/semester');
   };
 
   const handleSubjectClick = (subject: Subject) => {
-    console.log("[SemesterSubjectSelection] Subject selected:", subject);
+    
     navigate(`/semester-materials/${semesterNumber}/${subject.id}`, { 
       state: { 
         subject: subject,  // Pass the complete subject object
@@ -89,7 +87,7 @@ const SemesterSubjectSelection = () => {
         <Breadcrumbs 
           items={[
             { label: "Select Course", path: "/course" },
-            { label: "Select Batch", path: "/batch" },
+            { label: "Select Course", path: "/course" },
             { label: "Select Semester", path: "/semester" },
             { label: `Semester ${semesterNumber}` }
           ]} 

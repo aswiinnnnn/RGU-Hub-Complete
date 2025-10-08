@@ -67,7 +67,7 @@ const MaterialSelection = () => {
       <div className="container mx-auto px-4 pt-0 pb-6">
         <Breadcrumbs 
           items={[
-            { label: "Select Year", path: "/year" },
+            { label: "Select Course", path: "/course" },
             { label: yearData?.year || "", path: `/subjects/${yearId}` },
             { label: subject?.name || "" }
           ]} 
@@ -104,9 +104,11 @@ const MaterialSelection = () => {
               onClick={() => {
                 const materialTypeUrl = type.title.toLowerCase().replace(/ /g, '-');
                 if (materialTypeUrl === 'previous-year-questions') {
-                  navigate(`/exam-session/year/${yearId}/${subjectId}/${materialTypeUrl}`);
+                  // Year-based exam session replaced by semester flow fallback
+                  navigate(`/exam-session/semester/${yearId}/${subjectId}/${materialTypeUrl}`);
                 } else {
-                  navigate(`/download/${yearId}/${subjectId}/${materialTypeUrl}`);
+                  // Year-based download replaced by semester download
+                  navigate(`/semester-download/${yearId}/${subjectId}/${materialTypeUrl}`);
                 }
               }}
             />

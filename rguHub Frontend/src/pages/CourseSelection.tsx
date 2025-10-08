@@ -9,40 +9,36 @@ const courses = [
 	{
 		id: "bsc-nursing",
 		title: "BSC Nursing",
-		subtitle: "Comprehensive Nursing Program",
+		subtitle: "Semester-wise Scheme",
 		description:
-			"Covers fundamentals, clinical practice, and advanced nursing topics.",
+			"Navigate by semester. The curriculum is consolidated to a single semester-wise scheme.",
 		icon: BookOpen,
-		path: "/batch",
+		path: "/semester",
 	},
 	{
 		id: "bsc-physiotherapy",
 		title: "BSC Physiotherapy",
-		subtitle: "Physical Therapy & Rehabilitation",
+		subtitle: "RS5 Scheme",
 		description:
-			"Focuses on movement science, therapy techniques, and patient care.",
+			"Curriculum follows RS5 scheme. Proceed to select semester to continue.",
 		icon: HeartPulse,
-		path: "/batch",
+		path: "/semester",
 	},
 ];
 
 const CourseSelection = () => {
 	const navigate = useNavigate();
 
-	// Log page load
-	console.log("[CourseSelection] Page loaded");
+	// Production: avoid noisy console logs
 
 	// Log back navigation
 	const handleBack = () => {
-		console.log("[CourseSelection] Back to Home clicked");
 		navigate('/');
 	};
 
 	// Log course selection and navigation
 	const handleCourseSelect = (course: typeof courses[0]) => {
 		const courseCode = course.id === 'bsc-nursing' ? 'BN' : 'BPT';
-		console.log("[CourseSelection] Course selected:", course);
-		console.log("[CourseSelection] Navigating to:", course.path, "with state:", { course: courseCode });
 		navigate(course.path, { state: { course: courseCode } });
 	};
 
@@ -109,14 +105,11 @@ const CourseSelection = () => {
 							Not sure which course to select?
 						</h3>
 						<p className="text-sm text-muted-foreground">
-							<b>BSC Nursing</b> is ideal for those interested in patient care,
-							hospital management, and clinical nursing.
+							Select BSC Nursing if you are a nursing student under Rajeev Gandhi University of Health Science with semester wise scheme. Year wise scheme study materials are not currently available.
 							<br />
-							<b>BSC Physiotherapy</b> is best for those passionate about
-							rehabilitation, movement science, and therapy techniques.
+							Select Physiotherapy if you are a physiotherapy student under Rajeev Gandhi University of Health Science with RS5 scheme. Schemes older than RS5 are not currently available.
 							<br />
-							Select your course to get started with the right curriculum and
-							resources.
+							
 						</p>
 					</div>
 				</div>

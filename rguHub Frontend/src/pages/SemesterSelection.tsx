@@ -31,7 +31,7 @@ const SemesterSelection = () => {
       <div className="container mx-auto px-4 pt-0 pb-6">
         <Breadcrumbs 
           items={[
-            { label: "Select Batch", path: "/batch" },
+            { label: "Select Batch", path: "/course" },
             { label: "Select Semester" }
           ]} 
         />
@@ -40,11 +40,11 @@ const SemesterSelection = () => {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/batch')}
+            onClick={() => navigate('/course')}
             className="px-3 py-1  text-black text-sm font-semibold mb-5 border-[0.7px] border-black/20 shadow-nav  "
           >
             <ArrowLeft className="w-4 h-4 mr-1" />
-            Back to Batch Selection
+            Back to course Selection
           </Button>
           
           <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-3">

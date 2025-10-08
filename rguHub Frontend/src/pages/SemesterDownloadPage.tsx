@@ -40,17 +40,17 @@ const SemesterDownloadPage = () => {
 
   useEffect(() => {
     if (!subject?.slug) {
-      console.log("[SemesterDownloadPage] No subject slug available for API call");
+      
       setLoading(false);
       return;
     }
 
     // Get material type from URL params
     const materialTypeSlug = materialType;
-    console.log("[SemesterDownloadPage] Material type slug:", materialTypeSlug);
+    
 
     const apiUrl = `${API_BASE_URL}/materials/?subject=${subject.slug}&type=${materialTypeSlug}`;
-    console.log("[SemesterDownloadPage] Fetching materials from:", apiUrl);
+    
     
     setLoading(true);
     setError(null);
@@ -63,12 +63,12 @@ const SemesterDownloadPage = () => {
         return res.json();
       })
       .then(data => {
-        console.log("[SemesterDownloadPage] Fetched materials:", data);
+        
         setMaterials(data);
         setLoading(false);
       })
       .catch(err => {
-        console.error("[SemesterDownloadPage] API Error:", err);
+        
         setError(err.message);
         setLoading(false);
       });
@@ -82,7 +82,7 @@ const SemesterDownloadPage = () => {
   };
 
   const handleBackToMaterials = () => {
-    console.log("[SemesterDownloadPage] Back to Materials clicked");
+    
     // Navigate back to materials page with proper state
     navigate(`/semester-materials/${semesterId}/${subject.id}`, {
       state: {
@@ -100,7 +100,7 @@ const SemesterDownloadPage = () => {
       <div className="container mx-auto px-4 pt-0 pb-6 ">
         <Breadcrumbs 
           items={[
-            { label: "Select Batch", path: "/batch" },
+            { label: "Select Course", path: "/course" },
             { label: "Select Semester", path: "/semester" },
             { label: `Semester ${semesterNumber}`, path: `/semester-subjects/${semesterId}` },
             { label: subject?.name || "", path: `/semester-materials/${semesterId}/${subject.id}` },

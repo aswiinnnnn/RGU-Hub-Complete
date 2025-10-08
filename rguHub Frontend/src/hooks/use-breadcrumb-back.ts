@@ -18,21 +18,12 @@ export const useBreadcrumbBack = () => {
       // Default fallback
       let backPath = "/";
 
-      // Map routes to their breadcrumb parent
-      if (path === "/batch") backPath = "/";
-      else if (path === "/year") backPath = "/batch";
-      else if (path === "/semester") backPath = "/batch";
-      else if (path.startsWith("/subjects/")) backPath = "/year";
+      // Map routes to their breadcrumb parent (semester-only flow)
+      if (path === "/semester") backPath = "/course";
       else if (path.startsWith("/semester-subjects/")) backPath = "/semester";
-      else if (path.startsWith("/materials/")) backPath = `/subjects/${params.yearId ?? segments[1]}`;
       else if (path.startsWith("/semester-materials/")) backPath = `/semester-subjects/${params.semesterId ?? segments[1]}`;
-      else if (path.startsWith("/download/")) backPath = `/materials/${params.yearId ?? segments[1]}/${params.subjectId ?? segments[2]}`;
       else if (path.startsWith("/semester-download/")) backPath = `/semester-materials/${params.semesterId ?? segments[1]}/${params.subjectId ?? segments[2]}`;
-      else if (path.startsWith("/exam-session/")) {
-        const type = segments[1];
-        if (type === "year") backPath = `/materials/${params.yearId ?? segments[2]}/${params.subjectId ?? segments[3]}`;
-        else backPath = `/semester-materials/${params.yearId ?? segments[2]}/${params.subjectId ?? segments[3]}`;
-      }
+      // Default for any other deprecated route types: go to home
 
       if (backPath === location.pathname) return;
       isNavigating = true;

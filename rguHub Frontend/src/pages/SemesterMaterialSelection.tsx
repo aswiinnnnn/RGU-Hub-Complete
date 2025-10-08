@@ -63,9 +63,7 @@ const SemesterMaterialSelection = () => {
   // Get subject from navigation state
   const subject: Subject | undefined = location.state?.subject;
 
-  // Log subject info
-  console.log("[SemesterMaterialSelection] Subject:", subject);
-  console.log("[SemesterMaterialSelection] Location state:", location.state);
+  // Remove debug logs for production
 
   const [materials, setMaterials] = useState<Material[]>([]);
   const [materialTypes, setMaterialTypes] = useState<MaterialType[]>([]);
@@ -77,7 +75,7 @@ const SemesterMaterialSelection = () => {
     fetch(`${API_BASE_URL}/material-types/`)
       .then(res => res.json())
       .then(data => {
-        console.log("[SemesterMaterialSelection] Material types:", data);
+        
         setMaterialTypes(data);
       })
       .catch(err => {
@@ -87,40 +85,40 @@ const SemesterMaterialSelection = () => {
 
   useEffect(() => {
     if (!subject?.slug) {
-      console.log("[SemesterMaterialSelection] No subject slug available for API call");
+      
       setError("No subject slug available");
       return;
     }
     
     const apiUrl = `${API_BASE_URL}/materials/?subject=${subject.slug}`;
     const requestOptions = { method: "GET" };
-    console.log("[SemesterMaterialSelection] API Request:", { url: apiUrl, options: requestOptions });
+    
     
     setLoading(true);
     setError(null);
     
     fetch(apiUrl, requestOptions)
       .then(res => {
-        console.log("[SemesterMaterialSelection] API Response object:", res);
+        
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
         return res.json();
       })
       .then(data => {
-        console.log("[SemesterMaterialSelection] API Response data:", data);
+        
         setMaterials(data);
         setLoading(false);
       })
       .catch(error => {
-        console.error("[SemesterMaterialSelection] API Error:", error);
+        
         setError(error.message);
         setLoading(false);
       });
   }, [subject?.slug]);
 
   const handleBack = () => {
-    console.log("[SemesterMaterialSelection] Back to Subjects clicked");
+    
     navigate(`/semester-subjects/${semesterId}`, { 
       state: { 
         course: location.state?.course || "BN", 
@@ -132,11 +130,11 @@ const SemesterMaterialSelection = () => {
 
   const handleMaterialTypeClick = (materialType: MaterialType) => {
     if (!subject?.slug) {
-      console.log("[SemesterMaterialSelection] No subject slug for navigation");
+      
       return;
     }
     
-    console.log("[SemesterMaterialSelection] Material type selected:", materialType.name, "Subject slug:", subject.slug);
+    
     
     if (materialType.slug === 'pyq') {
       navigate(`/exam-session/semester/${semesterId}/${subject.slug}/${materialType.slug}`, {
@@ -163,7 +161,7 @@ const SemesterMaterialSelection = () => {
 
   // If no subject is available, show error or redirect
   if (!subject) {
-    console.log("[SemesterMaterialSelection] No subject data available, redirecting back");
+    
     return (
       <div className="min-h-screen bg-gradient-hero">
         <AppHeader />
@@ -197,7 +195,7 @@ const SemesterMaterialSelection = () => {
         <Breadcrumbs 
           items={[
             { label: "Select Course", path: "/course" },
-            { label: "Select Batch", path: "/batch" },
+            { label: "Select Course", path: "/course" },
             { label: "Select Semester", path: "/semester" },
             { label: `Semester ${semesterNumber}`, path: `/semester-subjects/${semesterId}` },
             { label: subject?.name || "" }

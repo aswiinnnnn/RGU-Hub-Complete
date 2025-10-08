@@ -11,7 +11,7 @@ const BatchSelection = () => {
 
   // Get selected course from previous page
   const { course = "BN" } = location.state || {};
-  console.log("[BatchSelection] Loaded with course:", course);
+  
 
   const batches = [
     {
@@ -20,7 +20,7 @@ const BatchSelection = () => {
       subtitle: "Year-wise Curriculum",
       description: "Traditional 4-year program structure",
       icon: BookOpen,
-      path: "/year",
+      path: "/semester",
       type: "year",
       value: 1
     },
@@ -38,14 +38,13 @@ const BatchSelection = () => {
 
   // Log when user clicks "Back to Courses"
   const handleBack = () => {
-    console.log("[BatchSelection] Back to Courses clicked");
+    
     navigate('/course');
   };
 
   // Log batch selection and navigation
   const handleBatchSelect = (batch: typeof batches[0]) => {
-    console.log("[BatchSelection] Batch selected:", batch);
-    console.log("[BatchSelection] Navigating to:", batch.path, "with state:", { course, type: batch.type, value: batch.value });
+    
     navigate(batch.path, { state: { course, type: batch.type, value: batch.value } });
   };
 

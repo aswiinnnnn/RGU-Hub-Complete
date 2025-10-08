@@ -78,10 +78,7 @@ const Index = () => {
         return res.json();
       })
       .then(data => setLatestUpdates(data.results ?? data))
-      .catch(err => {
-        // eslint-disable-next-line no-console
-        console.error(err);
-      });
+      .catch(() => {});
   }, []);
 
 
@@ -141,7 +138,7 @@ const Index = () => {
               title={item.title}
               description={item.description}
               color={item.color}
-              onClick={() => navigate('/batch')}
+              onClick={() => navigate('/course')}
             />
           ))}
         </div>
@@ -197,7 +194,14 @@ const Index = () => {
               <div
                 key={idx}
                 className="flex items-center bg-gradient-card rounded-xl p-4 border border-border shadow-sm cursor-pointer hover:shadow-md transition-all"
-                onClick={() => navigate(isRecruitment ? "/recruitment" : "/download")}
+                onClick={() => {
+                  if (isRecruitment) {
+                    navigate('/recruitment');
+                  } else {
+                    // Without deep-link hints from backend, send user to the semester flow
+                    navigate('/course');
+                  }
+                }}
               >
                 {icon}
                 <div className="flex-1">

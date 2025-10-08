@@ -327,7 +327,14 @@ class SubjectMaterial(models.Model):
         Always serve `file.url` at serialization time.
         """
         if self.file:
-            self.title = os.path.basename(self.file.name)
+            # Derive a human-friendly title from the filename without the last extension segment
+            base_name = os.path.basename(self.file.name)
+            if "." in base_name:
+                # remove only the last extension (handles names like "public key (2).pdf")
+                title_no_ext = base_name.rsplit(".", 1)[0]
+            else:
+                title_no_ext = base_name
+            self.title = title_no_ext
             # Do not persist URL to avoid stale links when Cloudinary delivery changes
             try:
                 # Keep url in sync if available, but it's optional and not relied upon

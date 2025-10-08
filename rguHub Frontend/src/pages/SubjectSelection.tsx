@@ -23,9 +23,7 @@ const SubjectSelection = () => {
 
   const { course = "bn", type = "year", value = yearId ? parseInt(yearId) : 1 } = location.state || {};
 
-  console.log("Selected course:", course);
-  console.log("Curriculum type:", type);
-  console.log("Year/Sem value:", value);
+  
 
   const yearNumber = type === "year" ? value : 1;
   const yearData = years[yearNumber - 1];
@@ -42,7 +40,7 @@ const SubjectSelection = () => {
         // Ensure subjects is always an array
         setSubjects(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error(err);
+        
         setSubjects([]);
       } finally {
         setLoading(false);
@@ -62,7 +60,7 @@ const SubjectSelection = () => {
       <div className="container mx-auto px-4 pt-0 pb-6">
         <Breadcrumbs
           items={[
-            { label: type === "year" ? "Select Year" : "Select Semester", path: type === "year" ? "/year" : "/semester" },
+            { label: "Select Semester", path: "/semester" },
             { label: yearData?.year || "" },
           ]}
         />
@@ -71,7 +69,7 @@ const SubjectSelection = () => {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate(type === "year" ? "/year" : "/semester")}
+            onClick={() => navigate("/semester")}
             className="px-3 py-1 text-black text-sm font-semibold mb-5 border-[0.7px] border-black/20 shadow-nav"
           >
             <ArrowLeft className="w-4 h-4 mr-1" />
@@ -94,7 +92,7 @@ const SubjectSelection = () => {
                 name={subject.name}
                 materialCount={5}
                 onClick={() =>
-                  navigate(`/materials/${value}/${subject.slug}`, {
+                  navigate(`/semester-materials/${value}/${subject.slug}`, {
                     state: { course, type, value },
                   })
                 }
@@ -116,7 +114,7 @@ const SubjectSelection = () => {
                   </div>
                   <Button
                     variant="outline"
-                    onClick={() => navigate(type === "year" ? "/year" : "/semester")}
+                    onClick={() => navigate("/semester")}
                   >
                     <ArrowLeft className="w-4 h-4 mr-1" />
                     Back to {type === "year" ? "Years" : "Semesters"}

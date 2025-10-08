@@ -20,30 +20,25 @@ export const DownloadCard = ({
   const { show } = useResponsiveToast();
   const truncatedTitle = title && title.length > 35 ? `${title.slice(0, 35)}...` : title;
   
-  const buildDownloadUrl = (url: string) => {
-    if (!url) return url;
+  // Frontend-only download that preserves filename by streaming the blob
+  const downloadViaBlob = async (url: string, filename: string) => {
     try {
-      // Ensure Cloudinary downloads use attachment to force save dialog
-      if (url.includes("res.cloudinary.com") && url.includes("/upload/")) {
-        // inject fl_attachment if not present
-        if (!url.includes("fl_attachment")) {
-          return url.replace("/upload/", "/upload/fl_attachment:");
-        }
-      }
-    } catch {
-      // ignore error
+      const response = await fetch(url, { credentials: 'omit' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = objectUrl;
+      link.download = filename;
+      link.rel = 'noopener';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(objectUrl);
+    } catch (e) {
+      // Fallback: open in new tab if download fails
+      window.open(url, '_blank', 'noopener,noreferrer');
     }
-    return url;
-  };
-
-  const triggerFileDownload = (url: string, filename: string) => {
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.rel = 'noopener';
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
   };
   const getFileIcon = () => {
     switch (type.toLowerCase()) {
@@ -101,9 +96,8 @@ export const DownloadCard = ({
               show('error', 'File not found', 'Please try again later.');
               return;
             }
-            const finalUrl = buildDownloadUrl(downloadUrl);
-            const safeName = `${title || 'file'}.${(type || 'pdf').toLowerCase()}`.replace(/\s+/g, '_');
-            triggerFileDownload(finalUrl, safeName);
+            const safeName = `${title || 'file'}.${(type || 'pdf').toLowerCase()}`.replace(/[^a-zA-Z0-9._-]+/g, '_');
+            downloadViaBlob(downloadUrl, safeName);
           }}
         >
           <Download className="w-4 h-4 mr-1" />
