@@ -34,9 +34,10 @@ rguHub Frontend/
 │   ├── pages/                # Page components
 │   │   ├── Index.tsx         # Homepage
 │   │   ├── CourseSelection.tsx # Course selection
-│   │   ├── SubjectSelection.tsx # Subject selection
-│   │   ├── MaterialSelection.tsx # Material selection
-│   │   ├── DownloadPage.tsx  # Download page
+│   │   ├── SemesterSelection.tsx # Semester selection
+│   │   ├── SemesterSubjectSelection.tsx # Subject selection (semester-based)
+│   │   ├── SemesterMaterialSelection.tsx # Material selection (semester-based)
+│   │   ├── SemesterDownloadPage.tsx  # Download page (semester-based)
 │   │   ├── Recruitment.tsx   # Job postings
 │   │   └── ...               # Other pages
 │   ├── config/               # Configuration files
@@ -140,13 +141,14 @@ App
 ├── QueryClientProvider (API state)
 ├── TooltipProvider (UI tooltips)
 ├── Toaster (Notifications)
-├── BrowserRouter (Routing)
+├── RouterProvider (Routing)
 └── Routes
     ├── Index (Homepage)
     ├── CourseSelection
-    ├── SubjectSelection
-    ├── MaterialSelection
-    ├── DownloadPage
+    ├── SemesterSelection
+    ├── SemesterSubjectSelection
+    ├── SemesterMaterialSelection
+    ├── SemesterDownloadPage
     └── Recruitment
 ```
 
@@ -201,26 +203,21 @@ export const Component = ({ propName, optionalProp = 0 }: ComponentProps) => {
 ```typescript
 // Main routes
 /                    # Homepage with latest updates
-/course             # Course selection (BSCN, BPT, etc.)
-/batch              # Batch selection (2022-26, etc.)
-/year               # Year selection (1st Year, 2nd Year, etc.)
-/semester           # Semester selection (1st Sem, 2nd Sem, etc.)
+ /course             # Course selection (BSCN, BPT)
+ /semester           # Semester selection (1 to 8)
 
 // Subject routes
-/subjects/:yearId                    # Subject selection for year-based programs
-/semester-subjects/:semesterId       # Subject selection for semester-based programs
+ /semester-subjects/:semesterId       # Subject selection for semester-based programs
 
 // Material routes
-/materials/:yearId/:subjectId                    # Material selection for year-based
-/semester-materials/:semesterId/:subjectId       # Material selection for semester-based
+ /semester-materials/:semesterId/:subjectId       # Material selection for semester-based
 
 // Download routes
-/download/:yearId/:subjectId/:materialType                    # Download for year-based
-/semester-download/:semesterId/:subjectId/:materialType       # Download for semester-based
+ /semester-download/:semesterId/:subjectId/:materialType       # Download for semester-based
 
 // Other routes
 /recruitment        # Job postings and opportunities
-/exam-session/:type/:yearId/:subjectId/:materialType  # Exam session selection
+ /exam-session/:type/:yearId/:subjectId/:materialType  # Exam session selection (semester type used)
 /*                 # 404 Not Found
 ```
 
@@ -257,7 +254,7 @@ Download Page (/download/:yearId/:subjectId/:materialType or /semester-download/
 API configuration is centralized in `src/config/api.ts`:
 
 ```typescript
-export const API_BASE_URL = 'http://127.0.0.1:8000';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
 ```
 
 ### API Endpoints

@@ -32,7 +32,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 // Page Components
 import Index from "./pages/Index";
@@ -53,40 +53,23 @@ const queryClient = new QueryClient();
  * Sets up the application with all necessary providers and routing.
  * Uses React Router for navigation and TanStack Query for API state management.
  */
+const router = createBrowserRouter([
+  { path: '/', element: <Index /> },
+  { path: '/course', element: <CourseSelection /> },
+  { path: '/semester', element: <SemesterSelection /> },
+  { path: '/semester-subjects/:semesterId', element: <SemesterSubjectSelection /> },
+  { path: '/semester-materials/:semesterId/:subjectId', element: <SemesterMaterialSelection /> },
+  { path: '/semester-download/:semesterId/:subjectId/:materialType', element: <SemesterDownloadPage /> },
+  { path: '/recruitment', element: <Recruitment /> },
+  { path: '*', element: <NotFound /> },
+], { future: { v7_relativeSplatPath: true } });
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      {/* Toast notifications for user feedback */}
       <Toaster />
       <Sonner />
-      
-      <BrowserRouter>
-        <Routes>
-          {/* Homepage - Shows latest updates and program overview */}
-          <Route path="/" element={<Index />} />
-          
-          {/* Course Selection - Choose between BSCN, BPT, etc. */}
-          <Route path="/course" element={<CourseSelection />} />
-          
-          {/* Semester Selection - Choose semester (1st Sem, 2nd Sem, etc.) */}
-          <Route path="/semester" element={<SemesterSelection />} />
-          
-          {/* Subject Selection for Semester-based Programs */}
-          <Route path="/semester-subjects/:semesterId" element={<SemesterSubjectSelection />} />
-          
-          {/* Material Selection for Semester-based Programs */}
-          <Route path="/semester-materials/:semesterId/:subjectId" element={<SemesterMaterialSelection />} />
-          
-          {/* Download Page for Semester-based Programs */}
-          <Route path="/semester-download/:semesterId/:subjectId/:materialType" element={<SemesterDownloadPage />} />
-          
-          {/* Recruitment Portal - Job postings and opportunities */}
-          <Route path="/recruitment" element={<Recruitment />} />
-          
-          {/* 404 Not Found - Must be last route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <RouterProvider router={router} />
     </TooltipProvider>
   </QueryClientProvider>
 );

@@ -6,8 +6,8 @@
  * 
  * Configuration:
  * - API_BASE_URL: Base URL for all API endpoints
- * - Currently set to local development server
- * - Should be updated for production deployment
+ * - Reads from Vite env var `VITE_API_BASE_URL` at build time
+ * - Falls back to local development server during dev
  * 
  * Usage:
  * Import this constant in components that need to make API calls:
@@ -35,6 +35,6 @@
  * Base URL for the Django REST API backend
  * 
  * Development: http://127.0.0.1:8000
- * Production: https://your-api-domain.com
+ * Production: set VITE_API_BASE_URL in .env or host settings
  */
-export const API_BASE_URL = 'http://127.0.0.1:8000';
+export const API_BASE_URL = (import.meta as any).env?.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
