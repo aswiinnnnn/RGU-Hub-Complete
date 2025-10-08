@@ -67,6 +67,9 @@ class SubjectMaterialSerializer(serializers.ModelSerializer):
     # Include complete material type object
     material_type = MaterialTypeSerializer(read_only=True)
 
+    # Always serve the live Cloudinary URL from the file field to avoid stale links
+    url = serializers.SerializerMethodField()
+
     class Meta:
         model = SubjectMaterial
         fields = [
@@ -76,13 +79,22 @@ class SubjectMaterialSerializer(serializers.ModelSerializer):
             "subject_name",     # full subject name
             "material_type",    # complete material type object
             "title",            # material title/filename
-            "url",              # Cloudinary download URL
+            "url",              # Cloudinary download URL (derived from file)
             "description",      # additional description
             "year",             # year for PYQs
             "month",            # month for PYQs
             "is_active",        # availability status
             "created_at",       # upload timestamp
         ]
+
+    def get_url(self, obj):
+        try:
+            if obj.file and hasattr(obj.file, 'url') and obj.file.url:
+                return obj.file.url
+        except Exception:
+            pass
+        # Fallback to stored url field if file url is unavailable
+        return getattr(obj, 'url', None)
 
 class SubjectSerializer(serializers.ModelSerializer):
     """

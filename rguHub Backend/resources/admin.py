@@ -52,12 +52,21 @@ class SubjectMaterialAdmin(admin.ModelAdmin):
     )
     list_filter = ("is_active", "subject__term__syllabus__program", "material_type", "year")
     search_fields = ("title", "subject__name", "subject__code")
-    readonly_fields = ("url", "file_type", "file_size", "created_at")
+    readonly_fields = ("file_url", "file_type", "file_size", "created_at")
 
     def uploaded_link(self, obj):
-        if obj.url:
-            return format_html(f"<a href='{obj.url}' target='_blank'>Open File</a>")
+        url = self.file_url(obj)
+        if url:
+            return format_html(f"<a href='{url}' target='_blank'>Open File</a>")
         return "-"
+    def file_url(self, obj):
+        try:
+            if obj.file and hasattr(obj.file, 'url') and obj.file.url:
+                return obj.file.url
+        except Exception:
+            pass
+        return getattr(obj, 'url', None)
+    file_url.short_description = "Cloudinary URL"
     uploaded_link.short_description = "Cloudinary URL"
 
     def file_type(self, obj):

@@ -156,4 +156,6 @@ CLOUDINARY_STORAGE = {
     "CLOUD_NAME": "dny4c1xm1",
     "API_KEY": "197496735553518",
     "API_SECRET": "cOosAf8aBcv-6qm40W_maKeC3B0",
+    # Ensure Cloudinary auto-detects resource type (image/raw/video) for correct delivery URLs
+    "RESOURCE_TYPE": "auto",
 }

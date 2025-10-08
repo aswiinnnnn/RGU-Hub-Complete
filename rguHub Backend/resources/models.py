@@ -180,7 +180,7 @@ class Subject(models.Model):
 
         unique_together = ("term", "code")
 
-    def _str_(self) -> str:
+    def __str__(self) -> str:
         return f"{self.code} - {self.name}"
 
     def save(self, *args, **kwargs):
@@ -214,7 +214,7 @@ class Subject(models.Model):
 
             slug_candidate = base
             counter = 1
-            Model = self._class_
+            Model = self.__class__
             while Model.objects.filter(slug=slug_candidate).exclude(pk=self.pk).exists():
                 counter += 1
                 slug_candidate = f"{base}-{counter}"
@@ -323,16 +323,17 @@ class SubjectMaterial(models.Model):
 
     def save(self, *args, **kwargs):
         """
-        Auto-fill title from filename and URL from Cloudinary.
-        
-        When a file is uploaded:
-        1. Extract filename as title
-        2. Get Cloudinary URL for direct access
-        3. Save the material record
+        Auto-fill title from filename. Do not persist Cloudinary URL to avoid stale links.
+        Always serve `file.url` at serialization time.
         """
         if self.file:
             self.title = os.path.basename(self.file.name)
-            self.url = self.file.url
+            # Do not persist URL to avoid stale links when Cloudinary delivery changes
+            try:
+                # Keep url in sync if available, but it's optional and not relied upon
+                self.url = self.file.url
+            except Exception:
+                pass
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:
