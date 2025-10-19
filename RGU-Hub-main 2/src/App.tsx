@@ -40,6 +40,7 @@ const AnalyticsComponent = import.meta.env.PROD
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useSEO } from "@/hooks/use-seo";
 import { AdditionalSEOTags } from "@/components/AdditionalSEOTags";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // Page Components
 import Index from "./pages/Index";
@@ -99,6 +100,7 @@ const App = () => (
           <AnalyticsComponent />
         </Suspense>
       ) : null}
+      <SpeedInsights />
     </TooltipProvider>
   </QueryClientProvider>
 );
